@@ -10,6 +10,8 @@ var users = require('./routes/users');
 
 var app = express();
 
+var mongoose = require('mongoose');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -56,5 +58,8 @@ app.use(function(err, req, res, next) {
   });
 });
 
+require('./models/Posts');
+require('./models/Comments');
+mongoose.connect('mongodb://electromafr:1gorille@ds047802.mongolab.com:47802/flapper-news');
 
 module.exports = app;
