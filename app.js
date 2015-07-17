@@ -63,3 +63,5 @@ require('./models/Comments');
 mongoose.connect('mongodb://electromafr:1gorille@ds047802.mongolab.com:47802/flapper-news');
 
 module.exports = app;
+
+// Test git
