@@ -4,11 +4,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+
+// MongoDB
 var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/news');
+require('./models/Posts');
+require('./models/Comments');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
 
 var app = express();
 
@@ -58,9 +62,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-require('./models/Posts');
-require('./models/Comments');
-mongoose.connect('mongodb://electromafr:1gorille@ds047802.mongolab.com:47802/flapper-news');
+
 
 
 module.exports = app;
