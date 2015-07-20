@@ -7,7 +7,9 @@ var bodyParser = require('body-parser');
 
 // MongoDB
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/news');
+
+mongoose.connect('mongodb://electromafr:1gorille@ds047802.mongolab.com:47802/flapper-news');
+
 require('./models/Posts');
 require('./models/Comments');
 
