@@ -5,13 +5,14 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// MongoDB
+// MongoDB & passport
 var mongoose = require('mongoose');
-
+var passport = require('passport');
 mongoose.connect('mongodb://electromafr:1gorille@ds047802.mongolab.com:47802/flapper-news');
-
 require('./models/Posts');
 require('./models/Comments');
+require('./models/Users');
+require('./config/passport');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -29,6 +30,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
 
 app.use('/', routes);
 app.use('/users', users);
