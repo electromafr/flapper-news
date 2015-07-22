@@ -9,13 +9,13 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
 mongoose.connect('mongodb://electromafr:1gorille@ds047802.mongolab.com:47802/flapper-news');
+
 require('./models/Posts');
 require('./models/Comments');
 require('./models/Users');
 require('./config/passport');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 
@@ -33,7 +33,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

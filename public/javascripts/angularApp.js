@@ -59,12 +59,14 @@ var app = angular.module('flapperNews', ['ui.router'])
     };
 
     auth.getToken = function () {
-      return $window.localStorage['flapper-news-token'];
+      if($window.localStorage['flapper-news-token'] !== "undefined")
+        return $window.localStorage['flapper-news-token'];
+      else
+        return false;
     };
 
     auth.isLoggedIn = function() {
       var token = auth.getToken();
-
       if(token) {
         var payload = JSON.parse($window.atob(token.split('.')[1]));
 
@@ -117,7 +119,7 @@ var app = angular.module('flapperNews', ['ui.router'])
 
     o.create = function(post) {
       return $http.post('/posts', post, {
-        headers: {Authorization: 'Bearer '+auth.getToken()}
+        headers: {Authorization: 'Bearer '+ auth.getToken()}
       }).success(function(data){
         o.posts.push(data);
       });
@@ -139,7 +141,7 @@ var app = angular.module('flapperNews', ['ui.router'])
 
     o.addComment = function(id, comment) {
       return $http.post('/posts/' + id + '/comments', comment, {
-         headers: {Authorization: 'Bearer '+auth.getToken()}
+        headers: {Authorization: 'Bearer '+auth.getToken()}
       });
     };
 
@@ -181,67 +183,68 @@ var app = angular.module('flapperNews', ['ui.router'])
         posts.upvote(post);
       };
 
-  }])
+    }])
 
-  .controller('PostsCtrl', [
-    '$scope',
-    'posts',
-    'post',
-    'auth',
-    function($scope, posts, post, auth){
+    .controller('PostsCtrl', [
+      '$scope',
+      'posts',
+      'post',
+      'auth',
+      function($scope, posts, post, auth){
 
-      $scope.isLoggedIn = auth.isLoggedIn;
-      $scope.post = post;
+        $scope.isLoggedIn = auth.isLoggedIn;
+        $scope.post = post;
 
-      $scope.addComment = function() {
-        if ($scope.body === ''){return;}
+        $scope.addComment = function() {
+          if ($scope.body === ''){return;}
 
-        posts.addComment(post._id, {
-          body: $scope.body,
-          author: 'user',
-        }).success(function(comment){
-          $scope.post.comments.push(comment);
-        });
-        $scope.body = '';
-      };
+          posts.addComment(post._id, {
+            body: $scope.body,
+            author: 'user',
+          }).success(function(comment){
+            $scope.post.comments.push(comment);
+          });
+          $scope.body = '';
+        };
 
-      $scope.incrementUpvotes = function(comment){
-        posts.upvoteComment(post, comment);
-      };
-  }])
+        $scope.incrementUpvotes = function(comment){
+          posts.upvoteComment(post, comment);
+        };
+      }])
 
 
 
-  .controller('AuthCtrl', [
-    '$scope',
-    '$state',
-    'auth',
-    function($scope, $state, auth){
-      $scope.user = {};
+      .controller('AuthCtrl', [
+        '$scope',
+        '$state',
+        'auth',
+        function($scope, $state, auth){
+          $scope.user = {};
 
-      $scope.register = function () {
-        auth.register($scope.user).error(function(error){
-          $scope.error = error;
-        }).then(function(){
-          $state.go('home');
-        });
-      };
+          $scope.register = function () {
+            auth.register($scope.user).error(function(error){
+              $scope.error = error;
+            }).then(function(){
+              $state.go('home');
+            });
+          };
 
-      $scope.logIn = function (){
-        auth.logIn($scope.user).error(function(error){
-          $scope.error = error;
-        }).then(function(){
-          $state.go('home');
-        });
-      };
-  }])
+          $scope.logIn = function (){
+            auth.logIn($scope.user).error(function(error){
+              $scope.error = error;
+            }).then(function(){
+              $state.go('home');
+            });
+          };
+        }])
 
-  .controller('NavCtrl', [
-    '$scope',
-    'auth',
-    function($scope, auth){
-      $scope.isLoggedIn = auth.isLoggedIn;
-      $scope.currentUser = auth.currentUser;
-      $scope.logOut = auth.logOut;
-    }
-  ])
+
+        .controller('NavCtrl', [
+          '$scope',
+          'auth',
+          function($scope, auth){
+            $scope.isLoggedIn = auth.isLoggedIn;
+            $scope.currentUser = auth.currentUser;
+            $scope.logOut = auth.logOut;
+          }
+        ])
